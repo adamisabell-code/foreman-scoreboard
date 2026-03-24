@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Foreman's Scoreboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .logo {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #FF6B00;
+      margin-bottom: 12px;
+    }
+
+    .header h1 {
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .header p {
+      color: #888;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .mission-bar {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .mission-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #FF6B00;
+      margin-bottom: 8px;
+    }
+
+    .mission-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .progress-track {
+      background: #2a2a2a;
+      border-radius: 100px;
+      height: 12px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF6B00, #ff9500);
+      border-radius: 100px;
+      transition: width 1s ease;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #888;
+    }
+
+    .progress-labels .current {
+      color: #FF6B00;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 16px;
+      margin-top: 32px;
+    }
+
+    .bill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bill-item {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .bill-item.completed {
+      border-color: #FF6B00;
+      opacity: 0.7;
+    }
+
+    .bill-item.next {
+      border-color: #FF6B00;
+      background: #1f1208;
+    }
+
+    .bill-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .bill-item.completed .bill-checkbox {
+      background: #FF6B00;
+      border-color: #FF6B00;
+    }
+
+    .bill-item.next .bill-checkbox {
+      border-color: #FF6B00;
+    }
+
+    .checkmark {
+      font-size: 12px;
+    }
+
+    .bill-info {
+      flex: 1;
+    }
+
+    .bill-name {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .bill-desc {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .bill-item.next .bill-desc {
+      color: #FF6B00;
+      font-weight: 600;
+    }
+
+    .bill-amount {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .bill-item.completed .bill-amount {
+      color: #FF6B00;
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .stat-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 900;
+      color: #FF6B00;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid #1f1f1f;
+    }
+
+    .footer p {
+      color: #444;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: #FF6B00;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+    }
+
+    .live-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #FF6B00;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .updated {
+      font-size: 12px;
+      color: #444;
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .header h1 { font-size: 28px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <div class="logo">🔧 Foreman's Report</div>
+      <h1>Replacing My Bills.<br/>One by One. In Public.</h1>
+      <p>Operations manager. Day job. AI agent. <br/>Watch what happens when a regular person goes all in.</p>
+    </div>
+
+    <!-- Mission Progress Bar -->
+    <div class="mission-bar">
+      <div class="mission-label">Mission: Replace My Salary</div>
+      <div class="mission-title">$0 / $5,625 per month</div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+      <div class="progress-labels">
+        <span class="current" id="currentRevenue">$0/mo revenue</span>
+        <span>Goal: $5,625/mo</span>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="statDays">1</div>
+        <div class="stat-label">Day</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statSubs">0</div>
+        <div class="stat-label">Subscribers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statMembers">0</div>
+        <div class="stat-label">Members</div>
+      </div>
+    </div>
+
+    <!-- Bills List -->
+    <div class="section-title"><span class="live-dot"></span>Bills to Replace</div>
+    <div class="bill-list">
+
+      <div class="bill-item next" id="bill-1">
+        <div class="bill-checkbox"></div>
+        <div class="bill-info">
+          <div class="bill-name">Car Payment</div>
+          <div class="bill-desc">← NEXT TARGET</div>
+        </div>
+        <div class="bill-amount">$532</div>
+      </div>
+
+      <div class="bill-item" id="bill-2">
+        <div class="bill-checkbox"></div>
+        <div class="bill-info">
+          <div class="bill-name">Groceries</div>
+          <div class="bill-desc">Monthly food budget</div>
+        </div>
+        <div class="bill-amount">$800</div>
+      </div>
+
+      <div class="bill-item" id="bill-3">
+        <div class="bill-checkbox"></div>
+        <div class="bill-info">
+          <div class="bill-name">Utilities</div>
+          <div class="bill-desc">Electric, gas, water</div>
+        </div>
+        <div class="bill-amount">$340</div>
+      </div>
+
+      <div class="bill-item" id="bill-4">
+        <div class="bill-checkbox"></div>
+        <div class="bill-info">
+          <div class="bill-name">Phone Bills</div>
+          <div class="bill-desc">Family plan</div>
+        </div>
+        <div class="bill-amount">$180</div>
+      </div>
+
+      <div class="bill-item" id="bill-5">
+        <div class="bill-checkbox"></div>
+        <div class="bill-info">
+          <div class="bill-name">Insurance</div>
+          <div class="bill-desc">Auto + home</div>
+        </div>
+        <div class="bill-amount">$420</div>
+      </div>
+
+      <div class="bill-item" id="bill-6">
+        <div class="bill-checkbox"></div>
+        <div class="bill-info">
+          <div class="bill-name">Mortgage</div>
+          <div class="bill-desc">The big one</div>
+        </div>
+        <div class="bill-amount">$4,250</div>
+      </div>
+
+      <div class="bill-item" id="bill-7">
+        <div class="bill-checkbox"></div>
+        <div class="bill-info">
+          <div class="bill-name">My Full Salary Replaced</div>
+          <div class="bill-desc">$67,500/yr — quit the day job</div>
+        </div>
+        <div class="bill-amount">$5,625/mo</div>
+      </div>
+
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="footer">
+      <p>Get the weekly report — what Foreman did, what it cost, what it made.</p>
+      <a class="cta-button" href="https://foremansreport.beehiiv.com/subscribe" target="_blank">
+        Follow the Journey →
+      </a>
+      <div class="updated" id="lastUpdated">Last updated: March 24, 2026</div>
+    </div>
+
+  </div>
+
+  <script>
+    // UPDATE THESE NUMBERS EACH WEEK
+    const data = {
+      monthlyRevenue: 0,
+      salaryGoal: 5625,
+      subscribers: 0,
+      members: 0,
+      dayNumber: 1,
+      billsPaid: [], // add bill ids here as you cross them off e.g. ["bill-1", "bill-2"]
+      nextBill: "bill-1",
+      lastUpdated: "March 24, 2026"
+    };
+
+    // Render
+    const pct = Math.min((data.monthlyRevenue / data.salaryGoal) * 100, 100);
+    document.getElementById("progressFill").style.width = pct + "%";
+    document.getElementById("currentRevenue").textContent = "$" + data.monthlyRevenue.toLocaleString() + "/mo revenue";
+    document.querySelector(".mission-title").textContent = "$" + data.monthlyRevenue.toLocaleString() + " / $" + data.salaryGoal.toLocaleString() + " per month";
+    document.getElementById("statDays").textContent = data.dayNumber;
+    document.getElementById("statSubs").textContent = data.subscribers.toLocaleString();
+    document.getElementById("statMembers").textContent = data.members;
+    document.getElementById("lastUpdated").textContent = "Last updated: " + data.lastUpdated;
+
+    // Mark completed bills
+    data.billsPaid.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add("completed");
+        el.classList.remove("next");
+        el.querySelector(".bill-checkbox").innerHTML = '<span class="checkmark">✓</span>';
+        el.querySelector(".bill-desc").textContent = "REPLACED ✓";
+      }
+    });
+
+    // Mark next target
+    if (data.nextBill && !data.billsPaid.includes(data.nextBill)) {
+      const next = document.getElementById(data.nextBill);
+      if (next) {
+        next.classList.add("next");
+        next.querySelector(".bill-desc").textContent = "← NEXT TARGET";
+      }
+    }
+  </script>
+</body>
+</html>
