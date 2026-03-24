@@ -164,6 +164,62 @@
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .updated { font-size: 12px; color: #444; text-align: center; margin-top: 16px; }
+
+    .endgame-section {
+      margin-top: 40px;
+      border: 1px solid #2a1a00;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .endgame-header {
+      background: linear-gradient(135deg, #1a0e00, #2a1800);
+      padding: 20px 24px;
+      border-bottom: 1px solid #2a1a00;
+    }
+    .endgame-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #FF6B00;
+      margin-bottom: 6px;
+    }
+    .endgame-title {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .endgame-subtitle {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+    .endgame-body { background: #111; padding: 20px 24px; }
+    .endgame-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #1f1f1f;
+    }
+    .endgame-row:last-of-type { border-bottom: none; }
+    .endgame-row-label { font-size: 14px; color: #aaa; }
+    .endgame-row-value { font-size: 15px; font-weight: 700; color: #FF6B00; }
+    .endgame-locked {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #1a0e00;
+      border: 1px dashed #3a2200;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 16px;
+    }
+    .endgame-lock-icon { font-size: 22px; }
+    .endgame-lock-text { font-size: 13px; color: #666; line-height: 1.5; }
+    .endgame-lock-text strong { color: #FF6B00; }
+
     @media(max-width:480px){
       .header h1{font-size:26px;}
       .stats-grid{grid-template-columns:1fr 1fr;}
@@ -360,6 +416,28 @@
     <div class="total-bar">
       <div class="total-label">TOTAL MONTHLY BILLS</div>
       <div class="total-amount">$11,998.33</div>
+    </div>
+  </div>
+
+  <div class="endgame-section">
+    <div class="endgame-header">
+      <div class="endgame-label">🏆 The Endgame</div>
+      <div class="endgame-title">Country Club Membership</div>
+      <div class="endgame-subtitle">The reward I'm building toward. We had to quit the last club when the pool loan hit. This one's the comeback.</div>
+    </div>
+    <div class="endgame-body">
+      <div class="endgame-row">
+        <div class="endgame-row-label">Initiation Fee (one-time)</div>
+        <div class="endgame-row-value">$10,000</div>
+      </div>
+      <div class="endgame-row">
+        <div class="endgame-row-label">Monthly Dues</div>
+        <div class="endgame-row-value">$1,100/mo</div>
+      </div>
+      <div class="endgame-locked">
+        <div class="endgame-lock-icon">🔒</div>
+        <div class="endgame-lock-text"><strong>Unlocks when all bills are replaced.</strong><br/>Replace the life first. Then level it up.</div>
+      </div>
     </div>
   </div>
 
