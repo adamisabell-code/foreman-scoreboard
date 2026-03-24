@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Foreman Scoreboard — Replace Your Bills. In Public.</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;900&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 60px 24px 40px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #FF6B00;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .hero h1 span { color: #FF6B00; }
+    .hero p {
+      font-size: 18px;
+      color: #aaa;
+      line-height: 1.6;
+      margin-bottom: 32px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* PREVIEW */
+    .preview {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 680px;
+      margin: 0 auto 48px;
+    }
+    .preview-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #FF6B00;
+      margin-bottom: 16px;
+    }
+    .progress-track {
+      background: #2a2a2a;
+      border-radius: 100px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF6B00, #ff9500);
+      border-radius: 100px;
+      width: 0%;
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    .bill-preview { display: flex; flex-direction: column; gap: 8px; }
+    .bill-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: #111;
+      border-radius: 8px;
+      border: 1px solid #222;
+    }
+    .bill-row.next { border-color: #FF6B00; background: #1a0f00; }
+    .bill-row.done { opacity: 0.5; }
+    .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #333;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+    .bill-row.next .dot { border-color: #FF6B00; }
+    .bill-row.done .dot { background: #FF6B00; border-color: #FF6B00; }
+    .bill-row-name { flex: 1; font-size: 13px; font-weight: 600; }
+    .bill-row-next { font-size: 11px; color: #FF6B00; font-weight: 700; }
+    .bill-row-amt { font-size: 13px; font-weight: 700; }
+    .bill-row.done .bill-row-amt { text-decoration: line-through; color: #FF6B00; }
+
+    /* CTA SECTION */
+    .cta-section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+      text-align: center;
+    }
+    .price-box {
+      background: #1a1a1a;
+      border: 2px solid #FF6B00;
+      border-radius: 16px;
+      padding: 36px 32px;
+      margin-bottom: 24px;
+    }
+    .price-label { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+    .price { font-size: 64px; font-weight: 900; color: #FF6B00; line-height: 1; margin-bottom: 4px; }
+    .price-sub { font-size: 14px; color: #666; margin-bottom: 28px; }
+    .buy-btn {
+      display: block;
+      background: #FF6B00;
+      color: #fff;
+      font-weight: 900;
+      font-size: 18px;
+      padding: 18px 40px;
+      border-radius: 10px;
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: background 0.2s;
+    }
+    .buy-btn:hover { background: #e55f00; }
+    .guarantee { font-size: 13px; color: #555; }
+
+    /* WHAT YOU GET */
+    .features {
+      max-width: 680px;
+      margin: 0 auto 48px;
+      padding: 0 24px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .feature-list { display: flex; flex-direction: column; gap: 12px; }
+    .feature-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .feature-icon { font-size: 22px; flex-shrink: 0; }
+    .feature-text h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .feature-text p { font-size: 13px; color: #666; line-height: 1.5; }
+
+    /* FOR WHO */
+    .for-who {
+      max-width: 680px;
+      margin: 0 auto 48px;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .for-who h2 { font-size: 28px; font-weight: 900; margin-bottom: 16px; }
+    .for-who p { font-size: 16px; color: #888; line-height: 1.7; }
+    .for-who p span { color: #fff; font-weight: 600; }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 32px 24px 48px;
+      border-top: 1px solid #1a1a1a;
+      color: #444;
+      font-size: 13px;
+    }
+    .footer a { color: #FF6B00; text-decoration: none; }
+
+    .live-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #FF6B00;
+      border-radius: 50%;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    @media(max-width:480px){
+      .hero h1 { font-size: 30px; }
+      .price { font-size: 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="logo">🔧 Foreman's Report</div>
+    <h1>Replace Your Bills.<br/><span>One by One.</span><br/>In Public.</h1>
+    <p>The exact scoreboard I use to turn my side income into a content series — and a business. Deploy yours in 5 minutes. No code.</p>
+  </div>
+
+  <!-- SCOREBOARD PREVIEW -->
+  <div class="preview" style="margin: 0 24px 48px; max-width: 632px; margin-left: auto; margin-right: auto;">
+    <div class="preview-label"><span class="live-dot"></span>Live example — Foreman's Scoreboard</div>
+    <div class="progress-track">
+      <div class="progress-fill" style="width: 0%"></div>
+    </div>
+    <div class="progress-labels">
+      <span style="color: #FF6B00; font-weight: 700;">$0/mo revenue</span>
+      <span>Goal: $11,998/mo</span>
+    </div>
+    <div class="bill-preview">
+      <div class="bill-row next">
+        <div class="dot"></div>
+        <div class="bill-row-name">Poop 911</div>
+        <div class="bill-row-next">← NEXT TARGET</div>
+        <div class="bill-row-amt">$19.43</div>
+      </div>
+      <div class="bill-row">
+        <div class="dot"></div>
+        <div class="bill-row-name">YouTube TV</div>
+        <div class="bill-row-amt">$90.87</div>
+      </div>
+      <div class="bill-row">
+        <div class="dot"></div>
+        <div class="bill-row-name">Google Fiber</div>
+        <div class="bill-row-amt">$103.09</div>
+      </div>
+      <div class="bill-row" style="opacity:0.4; justify-content: center; font-size: 13px; color: #555;">
+        + 15 more bills to replace...
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT YOU GET -->
+  <div class="features">
+    <div class="section-title">What you get for $27</div>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div class="feature-text">
+          <h3>Your own public scoreboard</h3>
+          <p>A live webpage that lists your real bills and tracks your progress crossing them off — one by one. Hosted free on GitHub Pages.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <h3>5-minute setup guide</h3>
+          <p>No coding. Copy, paste, done. I walk you through every step to get your scoreboard live with your real bills and your name on it.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎬</div>
+        <div class="feature-text">
+          <h3>The content hook</h3>
+          <p>Your scoreboard at $0 is your first TikTok. Every bill you cross off is another video. The tracker IS the content series.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔄</div>
+        <div class="feature-text">
+          <h3>Weekly update instructions</h3>
+          <p>How to update your numbers each week in under 60 seconds — so your scoreboard always reflects the real, live journey.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="price-box">
+      <div class="price-label">One-time payment</div>
+      <div class="price">$27</div>
+      <div class="price-sub">Yours forever. No subscription.</div>
+      <a class="buy-btn" href="https://buy.stripe.com/fZu28t63Z81F1YkbNabQY07" target="_blank">
+        Get My Scoreboard →
+      </a>
+      <div class="guarantee">🔒 Secure checkout via Stripe</div>
+    </div>
+  </div>
+
+  <!-- FOR WHO -->
+  <div class="for-who">
+    <h2>This is for you if...</h2>
+    <p>
+      You have a <span>day job</span> and you're building something on the side.<br/>
+      You want to <span>document the journey publicly</span> but don't know how to start.<br/>
+      You believe <span>AI can change your financial situation</span> but have no idea where to begin.<br/><br/>
+      This isn't a course. It's not a community. It's a <span>starting line.</span><br/>
+      Plant your flag. Show the world your $0. Then start crossing things off.
+    </p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>🔧 <strong>Foreman's Report</strong> — Built by an operations manager, powered by AI.</p>
+    <p style="margin-top: 8px;">
+      <a href="https://foremansreport.beehiiv.com/subscribe">Follow the weekly journey →</a>
+    </p>
+  </div>
+
+</body>
+</html>
