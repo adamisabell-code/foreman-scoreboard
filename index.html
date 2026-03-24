@@ -80,6 +80,42 @@
     .stat-value { font-size: 22px; font-weight: 900; color: #FF6B00; margin-bottom: 4px; }
     .stat-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
 
+    .deadline-bar {
+      background: #1a0a0a;
+      border: 1px solid #3a1a1a;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+    .deadline-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .deadline-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ff4444;
+      margin-bottom: 4px;
+    }
+    .deadline-sub { font-size: 12px; color: #666; }
+    .deadline-right { text-align: center; }
+    .deadline-days { font-size: 36px; font-weight: 900; color: #ff4444; line-height: 1; }
+    .deadline-days-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+    .deadline-track {
+      background: #2a1a1a;
+      border-radius: 100px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .deadline-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff4444, #ff6b00);
+      border-radius: 100px;
+      transition: width 1.2s ease;
+    }
+
     .section-title {
       font-size: 11px;
       font-weight: 700;
@@ -249,7 +285,7 @@
 
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="stat-value" id="statDays">1</div>
+      <div class="stat-value" id="statDays">2</div>
       <div class="stat-label">Day</div>
     </div>
     <div class="stat-card">
@@ -263,6 +299,22 @@
     <div class="stat-card">
       <div class="stat-value" id="statRevenue">$0</div>
       <div class="stat-label">Revenue</div>
+    </div>
+  </div>
+
+  <div class="deadline-bar">
+    <div class="deadline-inner">
+      <div class="deadline-left">
+        <div class="deadline-label">⏰ Foreman's 90-Day Deadline</div>
+        <div class="deadline-sub">Show real progress or get fired. Clock is ticking.</div>
+      </div>
+      <div class="deadline-right">
+        <div class="deadline-days" id="daysLeft">88</div>
+        <div class="deadline-days-label">days left</div>
+      </div>
+    </div>
+    <div class="deadline-track">
+      <div class="deadline-fill" id="deadlineFill" style="width:2%"></div>
     </div>
   </div>
 
@@ -469,6 +521,12 @@
   document.getElementById("statMembers").textContent = data.members;
   document.getElementById("statRevenue").textContent = "$" + data.monthlyRevenue.toLocaleString();
   document.getElementById("lastUpdated").textContent = "Last updated: " + data.lastUpdated + " · Day " + data.dayNumber;
+
+  const TOTAL_DAYS = 90;
+  const daysLeft = Math.max(0, TOTAL_DAYS - data.dayNumber);
+  const deadlinePct = Math.min((data.dayNumber / TOTAL_DAYS) * 100, 100);
+  document.getElementById("daysLeft").textContent = daysLeft;
+  document.getElementById("deadlineFill").style.width = deadlinePct + "%";
 
   data.billsPaid.forEach(id => {
     const el = document.getElementById(id);
