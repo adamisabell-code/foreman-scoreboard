@@ -259,16 +259,26 @@
     .powered-by {
       text-align: center;
       margin-top: 24px;
-      padding-top: 20px;
-      border-top: 1px solid #1a1a1a;
+      padding-top: 24px;
+      border-top: 1px solid #2a2a2a;
     }
     .powered-by a {
-      color: #555;
-      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #aaa;
+      font-size: 15px;
+      font-weight: 600;
       text-decoration: none;
       transition: color 0.2s;
     }
-    .powered-by a:hover { color: #FF6B00; }
+    .powered-by a:hover { color: #fff; }
+    .powered-by img {
+      height: 22px;
+      width: auto;
+      display: inline-block;
+      vertical-align: middle;
+    }
 
     @media(max-width:480px){
       .header h1{font-size:26px;}
@@ -514,7 +524,10 @@
   </div>
 
   <div class="powered-by">
-    <a href="https://www.beehiiv.com?via=Adam-Isabell" target="_blank">Powered by Beehiiv — start your own newsletter free →</a>
+    <a href="https://www.beehiiv.com?via=Adam-Isabell" target="_blank">
+      <img src="https://cdn.beehiiv.com/assets/beehiiv-logo-white.png" alt="Beehiiv" onerror="this.style.display='none'" />
+      Powered by Beehiiv — start your own newsletter free →
+    </a>
   </div>
 
 </div>
