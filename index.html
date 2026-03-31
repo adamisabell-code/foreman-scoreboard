@@ -164,6 +164,95 @@
     .bill-amount { font-size: 15px; font-weight: 700; color: #fff; white-space: nowrap; }
     .bill-item.completed .bill-amount { color: #FF6B00; text-decoration: line-through; opacity: 0.5; }
 
+    /* Admin mode */
+    .admin-toggle {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      width: 36px;
+      height: 36px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      opacity: 0.08;
+      font-size: 20px;
+      transition: opacity 0.3s;
+      z-index: 999;
+    }
+    .admin-toggle:hover { opacity: 0.4; }
+    .admin-toggle.active { opacity: 0.9; }
+    .admin-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .admin-modal.open { display: flex; }
+    .admin-box {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 32px;
+      width: 320px;
+      text-align: center;
+    }
+    .admin-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .admin-box p { font-size: 13px; color: #666; margin-bottom: 20px; }
+    .admin-box input {
+      width: 100%;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 15px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+    .admin-box input:focus { border-color: #FF6B00; }
+    .admin-btn {
+      width: 100%;
+      background: #FF6B00;
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .admin-cancel {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: #555;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .admin-cancel:hover { color: #888; }
+    body.admin-mode .bill-item:not(.completed) { cursor: pointer; }
+    body.admin-mode .bill-item:not(.completed):hover { border-color: #FF6B00; background: #1f1208; }
+    body.admin-mode .bill-item.completed { cursor: pointer; opacity: 0.7; }
+    body.admin-mode .bill-item.completed:hover { opacity: 1; }
+    .admin-badge {
+      position: fixed;
+      bottom: 18px;
+      left: 18px;
+      background: #FF6B00;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      display: none;
+      z-index: 999;
+    }
+    body.admin-mode .admin-badge { display: block; }
+
     .total-bar {
       background: #1a1a1a;
       border: 1px solid #333;
@@ -344,7 +433,7 @@
 
   <div class="section-title"><span class="live-dot"></span>Bills to Replace</div>
   <div class="bill-list">
-    <div class="bill-item next" id="bill-1">
+    <div class="bill-item" id="bill-1">
       <div class="bill-checkbox"></div>
       <div class="bill-info">
         <div class="bill-name">Poop 911</div>
@@ -531,42 +620,185 @@
   </div>
 
 </div>
+
+<!-- Admin toggle (hidden bottom-right corner) -->
+<button class="admin-toggle" id="adminToggle" title="">🔧</button>
+<div class="admin-badge" id="adminBadge">ADMIN MODE</div>
+
+<!-- Admin login modal -->
+<div class="admin-modal" id="adminModal">
+  <div class="admin-box">
+    <h3>Admin Access</h3>
+    <p>Enter password to toggle bills</p>
+    <input type="password" id="adminPass" placeholder="Password" />
+    <button class="admin-btn" id="adminSubmit">Unlock</button>
+    <br/>
+    <button class="admin-cancel" id="adminCancel">Cancel</button>
+  </div>
+</div>
 <script>
+  // ── Scoreboard data (updated by Foreman daily) ──
   const data = {
-    monthlyRevenue: 0,
+    monthlyRevenue: 27,
     totalGoal: 11998.33,
     subscribers: 15,
     members: 0,
-    dayNumber: 6,
-    billsPaid: [],
-    nextBill: "bill-1",
+    dayNumber: 7,
+    billsPaid: ["bill-1"],
+    nextBill: "bill-2",
     lastUpdated: "March 31, 2026"
   };
 
-  const pct = Math.min((data.monthlyRevenue / data.totalGoal) * 100, 100);
-  document.getElementById("progressFill").style.width = pct + "%";
-  document.getElementById("currentRevenue").textContent = "$" + data.monthlyRevenue.toLocaleString() + "/mo revenue";
-  document.getElementById("missionTitle").textContent = "$" + data.monthlyRevenue.toLocaleString() + " / $" + data.totalGoal.toLocaleString() + " per month";
-  document.getElementById("statDays").textContent = data.dayNumber;
-  document.getElementById("statSubs").textContent = data.subscribers.toLocaleString();
-  document.getElementById("statMembers").textContent = data.members;
-  document.getElementById("statRevenue").textContent = "$" + data.monthlyRevenue.toLocaleString();
-  document.getElementById("lastUpdated").textContent = "Last updated: " + data.lastUpdated + " · Day " + data.dayNumber;
+  // ── Admin password hash (SHA-256 of "Foreman2026") ──
+  const ADMIN_HASH = "f36674b58ab5b1df4f9bfd4c0f2c7e6e077690dc85ce3b39d5a6e82257e92dfd";
 
-  const TOTAL_DAYS = 90;
-  const daysLeft = Math.max(0, TOTAL_DAYS - data.dayNumber);
-  const deadlinePct = Math.min((data.dayNumber / TOTAL_DAYS) * 100, 100);
-  document.getElementById("daysLeft").textContent = daysLeft;
-  document.getElementById("deadlineFill").style.width = deadlinePct + "%";
+  // ── Bill metadata for re-rendering ──
+  const BILLS = {
+    "bill-1":  { name: "Poop 911",            desc: "Pet waste service",  amount: "$19.43" },
+    "bill-2":  { name: "YouTube TV",           desc: "Streaming",          amount: "$90.87" },
+    "bill-3":  { name: "Google Fiber",         desc: "Internet",           amount: "$103.09" },
+    "bill-4":  { name: "Texas Gas Bill",       desc: "Home gas",           amount: "$100.00" },
+    "bill-5":  { name: "Goodleap HVAC Loan",   desc: "HVAC financing",     amount: "$169.23" },
+    "bill-6":  { name: "Cell Phones",          desc: "Family plan",        amount: "$200.00" },
+    "bill-7":  { name: "Wine Memberships",     desc: "The finer things",   amount: "$300.00" },
+    "bill-8":  { name: "Austin Utilities",     desc: "Electric & water",   amount: "$350.00" },
+    "bill-9":  { name: "Gym Memberships",      desc: "Health & fitness",   amount: "$350.00" },
+    "bill-10": { name: "Gas",                  desc: "Fuel",               amount: "$400.00" },
+    "bill-11": { name: "Pets",                 desc: "Food, vet, etc.",    amount: "$400.00" },
+    "bill-12": { name: "Pool Construction Loan", desc: "Pool loan",        amount: "$800.00" },
+    "bill-13": { name: "Groceries",            desc: "Food",               amount: "$800.00" },
+    "bill-14": { name: "Adam's Truck",         desc: "Truck payment",      amount: "$578.71" },
+    "bill-15": { name: "Ashley's BMW",         desc: "Car payment",        amount: "$717.16" },
+    "bill-16": { name: "Entertainment",        desc: "Dining, fun, life",  amount: "$750.00" },
+    "bill-17": { name: "Credit Cards",         desc: "Monthly payments",   amount: "$1,500.00" },
+    "bill-18": { name: "Rocket Mortgage",      desc: "The big one 🏠",     amount: "$4,369.84" }
+  };
 
-  data.billsPaid.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
+  // ── Load overrides from localStorage ──
+  let paidOverride = null;
+  try {
+    const stored = localStorage.getItem("foreman_paid");
+    if (stored) paidOverride = JSON.parse(stored);
+  } catch(e) {}
+  const billsPaid = paidOverride !== null ? paidOverride : data.billsPaid;
+
+  // ── Render scoreboard stats ──
+  function render() {
+    const pct = Math.min((data.monthlyRevenue / data.totalGoal) * 100, 100);
+    document.getElementById("progressFill").style.width = pct + "%";
+    document.getElementById("currentRevenue").textContent = "$" + data.monthlyRevenue.toLocaleString() + "/mo revenue";
+    document.getElementById("missionTitle").textContent = "$" + data.monthlyRevenue.toLocaleString() + " / $" + data.totalGoal.toLocaleString() + " per month";
+    document.getElementById("statDays").textContent = data.dayNumber;
+    document.getElementById("statSubs").textContent = data.subscribers.toLocaleString();
+    document.getElementById("statMembers").textContent = data.members;
+    document.getElementById("statRevenue").textContent = "$" + data.monthlyRevenue.toLocaleString();
+    document.getElementById("lastUpdated").textContent = "Last updated: " + data.lastUpdated + " · Day " + data.dayNumber;
+
+    const TOTAL_DAYS = 90;
+    const daysLeft = Math.max(0, TOTAL_DAYS - data.dayNumber);
+    const deadlinePct = Math.min((data.dayNumber / TOTAL_DAYS) * 100, 100);
+    document.getElementById("daysLeft").textContent = daysLeft;
+    document.getElementById("deadlineFill").style.width = deadlinePct + "%";
+
+    // Reset all bills to default state
+    Object.keys(BILLS).forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove("completed", "next");
+      el.querySelector(".bill-checkbox").innerHTML = "";
+      el.querySelector(".bill-desc").textContent = BILLS[id].desc;
+      el.querySelector(".bill-amount").textContent = BILLS[id].amount;
+    });
+
+    // Apply paid state
+    billsPaid.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
       el.classList.add("completed");
-      el.classList.remove("next");
       el.querySelector(".bill-checkbox").innerHTML = "✓";
       el.querySelector(".bill-desc").textContent = "REPLACED ✓";
+    });
+
+    // Mark next unpaid bill
+    const allIds = Object.keys(BILLS);
+    const nextId = allIds.find(id => !billsPaid.includes(id));
+    if (nextId) {
+      const nextEl = document.getElementById(nextId);
+      if (nextEl) nextEl.classList.add("next");
     }
+  }
+
+  render();
+
+  // ── SHA-256 helper ──
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,"0")).join("");
+  }
+
+  // ── Admin mode ──
+  let adminMode = false;
+
+  const adminToggle = document.getElementById("adminToggle");
+  const adminModal = document.getElementById("adminModal");
+  const adminPass = document.getElementById("adminPass");
+  const adminSubmit = document.getElementById("adminSubmit");
+  const adminCancel = document.getElementById("adminCancel");
+
+  adminToggle.addEventListener("click", () => {
+    if (adminMode) {
+      // Exit admin mode
+      adminMode = false;
+      document.body.classList.remove("admin-mode");
+      adminToggle.classList.remove("active");
+    } else {
+      adminModal.classList.add("open");
+      adminPass.value = "";
+      setTimeout(() => adminPass.focus(), 100);
+    }
+  });
+
+  adminCancel.addEventListener("click", () => {
+    adminModal.classList.remove("open");
+  });
+
+  adminPass.addEventListener("keydown", e => {
+    if (e.key === "Enter") adminSubmit.click();
+    if (e.key === "Escape") adminCancel.click();
+  });
+
+  adminSubmit.addEventListener("click", async () => {
+    const hash = await sha256(adminPass.value);
+    if (hash === ADMIN_HASH) {
+      adminMode = true;
+      document.body.classList.add("admin-mode");
+      adminToggle.classList.add("active");
+      adminModal.classList.remove("open");
+    } else {
+      adminPass.value = "";
+      adminPass.placeholder = "Wrong password";
+      adminPass.style.borderColor = "#ff4444";
+      setTimeout(() => {
+        adminPass.placeholder = "Password";
+        adminPass.style.borderColor = "#333";
+      }, 1500);
+    }
+  });
+
+  // ── Bill click handler (admin mode only) ──
+  document.querySelectorAll(".bill-item").forEach(el => {
+    el.addEventListener("click", () => {
+      if (!adminMode) return;
+      const id = el.id;
+      const idx = billsPaid.indexOf(id);
+      if (idx === -1) {
+        billsPaid.push(id);
+      } else {
+        billsPaid.splice(idx, 1);
+      }
+      localStorage.setItem("foreman_paid", JSON.stringify(billsPaid));
+      render();
+    });
   });
 </script>
 </body>
