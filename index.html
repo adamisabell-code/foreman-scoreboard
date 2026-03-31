@@ -645,7 +645,7 @@
     members: 0,
     dayNumber: 7,
     billsPaid: ["bill-1"],
-    nextBill: "bill-2",
+    nextBill: "bill-2", // this is the source of truth for all visitors
     lastUpdated: "March 31, 2026"
   };
 
@@ -674,13 +674,16 @@
     "bill-18": { name: "Rocket Mortgage",      desc: "The big one 🏠",     amount: "$4,369.84" }
   };
 
-  // ── Load overrides from localStorage ──
-  let paidOverride = null;
+  // ── Load overrides from localStorage, merged with hardcoded defaults ──
+  let localPaid = [];
   try {
     const stored = localStorage.getItem("foreman_paid");
-    if (stored) paidOverride = JSON.parse(stored);
+    if (stored) localPaid = JSON.parse(stored);
   } catch(e) {}
-  const billsPaid = paidOverride !== null ? paidOverride : data.billsPaid;
+  // Merge: hardcoded billsPaid is the source of truth for all visitors.
+  // localStorage only adds admin-toggled extras on top (for the admin's browser).
+  // When Foreman updates the code, hardcoded list wins for everyone.
+  const billsPaid = Array.from(new Set([...data.billsPaid, ...localPaid]));
 
   // ── Render scoreboard stats ──
   function render() {
