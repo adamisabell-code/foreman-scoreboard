@@ -101,6 +101,15 @@ async function getStripeMembers() {
   return count;
 }
 
+// ── Read existing value from HTML ────────────────────────────────────────────
+function readExistingRevenue() {
+  try {
+    const html = fs.readFileSync(HTML_PATH, 'utf8');
+    const m = html.match(/monthlyRevenue:\s*([\d.]+)/);
+    return m ? parseFloat(m[1]) : 0;
+  } catch (e) { return 0; }
+}
+
 // ── Patch the HTML ────────────────────────────────────────────────────────────
 function patchHTML(subs, revenue, members, days, dateStr) {
   let html = fs.readFileSync(HTML_PATH, 'utf8');
@@ -147,8 +156,12 @@ function gitPush(days) {
     const dateStr = formatDate(new Date());
 
     // Stripe not configured — keep existing values for those fields
-    const finalRevenue  = revenue  !== null ? revenue  : 0;
-    const finalMembers  = members  !== null ? members  : 0;
+    // Revenue: use Stripe value only if it's HIGHER than what's already in the HTML
+    // (prevents auto-updater from wiping manually-recorded one-time sales)
+    const existingRevenue = readExistingRevenue();
+    const stripeRevenue   = revenue !== null ? revenue : 0;
+    const finalRevenue    = Math.max(existingRevenue, stripeRevenue);
+    const finalMembers    = members  !== null ? members  : 0;
 
     patchHTML(subs, finalRevenue, finalMembers, days, dateStr);
     gitPush(days);
