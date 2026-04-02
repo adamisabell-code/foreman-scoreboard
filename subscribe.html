@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Foreman's Report — I gave an AI a job. Here's what happened.</title>
+  <meta name="description" content="Operations manager. Day job. AI agent handles the work. Real numbers, documented every week. Free newsletter." />
+  <meta property="og:title" content="Foreman's Report" />
+  <meta property="og:description" content="I gave an AI agent my job. Here's what happened." />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange: #FF6B00;
+      --orange-dim: rgba(255, 107, 0, 0.12);
+      --bg: #0f0f0f;
+      --surface: #181818;
+      --border: #242424;
+      --text: #f0f0f0;
+      --muted: #888;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      padding: 0 0 60px;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-logo {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+    }
+    .topbar-live {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .live-dot {
+      width: 6px; height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 580px;
+      margin: 0 auto;
+      padding: 48px 20px 0;
+      text-align: center;
+    }
+
+    .day-badge {
+      display: inline-block;
+      background: var(--orange-dim);
+      border: 1px solid rgba(255,107,0,0.3);
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 8vw, 52px);
+      font-weight: 900;
+      line-height: 1.08;
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+    }
+    .hero h1 .accent { color: var(--orange); }
+
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 36px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-sub strong { color: var(--text); }
+
+    /* ── SCOREBOARD PILL ── */
+    .scoreboard-pill {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 0 auto 36px;
+      max-width: 380px;
+      overflow: hidden;
+    }
+    .pill-stat {
+      flex: 1;
+      padding: 16px 12px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .pill-stat:last-child { border-right: none; }
+    .pill-val {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--orange);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .pill-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── CTA BLOCK ── */
+    .cta-block {
+      max-width: 440px;
+      margin: 0 auto 48px;
+      padding: 0 20px;
+      text-align: center;
+    }
+    .cta-main {
+      display: block;
+      width: 100%;
+      background: var(--orange);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      text-decoration: none;
+      padding: 18px 28px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      margin-bottom: 12px;
+    }
+    .cta-main:hover { background: #e55e00; transform: translateY(-1px); }
+    .cta-main:active { transform: translateY(0); }
+    .cta-note {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      max-width: 580px;
+      margin: 0 auto 40px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .section-divider hr {
+      flex: 1;
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+    .section-divider span {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── STORY ── */
+    .story {
+      max-width: 540px;
+      margin: 0 auto 48px;
+      padding: 0 20px;
+    }
+    .story p {
+      font-size: 16px;
+      line-height: 1.75;
+      color: #bbb;
+      margin-bottom: 16px;
+    }
+    .story p strong { color: var(--text); font-weight: 700; }
+    .story p .orange { color: var(--orange); font-weight: 700; }
+
+    /* ── WHAT YOU GET ── */
+    .what-section {
+      max-width: 540px;
+      margin: 0 auto 48px;
+      padding: 0 20px;
+    }
+    .what-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+    }
+    .what-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .what-item:last-child { border-bottom: none; }
+    .what-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .what-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .what-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── PROOF STRIP ── */
+    .proof-strip {
+      max-width: 540px;
+      margin: 0 auto 48px;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .proof-strip-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+    .proof-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .proof-row:last-child { border-bottom: none; }
+    .proof-key { color: var(--muted); }
+    .proof-val { font-weight: 700; }
+    .proof-val.green { color: #22c55e; }
+    .proof-val.red { color: #ef4444; }
+    .proof-val.orange { color: var(--orange); }
+
+    /* ── FOR SECTION ── */
+    .for-section {
+      max-width: 540px;
+      margin: 0 auto 48px;
+      padding: 0 20px;
+    }
+    .for-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+    }
+    .for-yes, .for-no {
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      padding-left: 28px;
+      position: relative;
+      color: var(--muted);
+    }
+    .for-yes::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #22c55e;
+      font-weight: 700;
+    }
+    .for-no::before {
+      content: '✗';
+      position: absolute;
+      left: 0;
+      color: #ef4444;
+      font-weight: 700;
+    }
+    .for-yes strong, .for-no strong { color: var(--text); }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 32px 20px;
+      text-align: center;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .final-cta h2 {
+      font-size: clamp(22px, 5vw, 30px);
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .final-cta p {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      max-width: 540px;
+      margin: 24px auto 0;
+      padding: 0 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #555;
+      line-height: 1.8;
+    }
+    .footer a { color: #555; text-decoration: underline; }
+
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">🔧 Foreman's Report</div>
+  <div class="topbar-live">
+    <div class="live-dot"></div>
+    <span>Live mission</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="day-badge" id="dayBadge">Day 8 of 90</div>
+
+  <h1>
+    I gave an AI<br>
+    a <span class="accent">real job.</span><br>
+    Here's what happened.
+  </h1>
+
+  <p class="hero-sub">
+    Operations manager. Day job. Bills to pay.
+    I gave an AI agent a mission: <strong>replace $11,998/month in 90 days.</strong>
+    I document everything — publicly.
+  </p>
+
+  <!-- LIVE SCOREBOARD PILL -->
+  <div class="scoreboard-pill">
+    <div class="pill-stat">
+      <div class="pill-val" id="subCount">17</div>
+      <div class="pill-label">Subscribers</div>
+    </div>
+    <div class="pill-stat">
+      <div class="pill-val" id="revCount">$54</div>
+      <div class="pill-label">Revenue</div>
+    </div>
+    <div class="pill-stat">
+      <div class="pill-val" id="daysLeft">82</div>
+      <div class="pill-label">Days Left</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRIMARY CTA -->
+<div class="cta-block">
+  <a class="cta-main" href="https://foremansreport.beehiiv.com/subscribe" target="_blank">
+    Follow the mission — it's free →
+  </a>
+  <div class="cta-note">One email per week. Real numbers. No highlight reel.</div>
+</div>
+
+<!-- SECTION DIVIDER -->
+<div class="section-divider">
+  <hr><span>The story</span><hr>
+</div>
+
+<!-- STORY -->
+<div class="story">
+  <p>
+    I have a day job. I have bills. I looked at my monthly expenses — <strong>$11,998 a month</strong> — and asked: what if an AI agent could replace all of it?
+  </p>
+  <p>
+    Not someday. <span class="orange">In 90 days.</span> Starting from zero.
+  </p>
+  <p>
+    So I built one. I named him Foreman. Every morning before I go to work, he files a report — what he researched, what he wrote, what he built, what the numbers say. I spend 20 minutes reviewing it. That's the whole system.
+  </p>
+  <p>
+    I'm documenting every step publicly: the TikToks, this newsletter, the live scoreboard. No edits. No cherry-picking. <strong>If it fails, you'll see it fail.</strong>
+  </p>
+  <p>
+    Week 1 is done. The numbers are real. They're not impressive yet. That's the point.
+  </p>
+</div>
+
+<!-- SECTION DIVIDER -->
+<div class="section-divider">
+  <hr><span>What you get</span><hr>
+</div>
+
+<!-- WHAT YOU GET -->
+<div class="what-section">
+  <div class="what-label">Every Monday in your inbox</div>
+
+  <div class="what-item">
+    <div class="what-icon">📊</div>
+    <div>
+      <div class="what-title">Real numbers — every week</div>
+      <div class="what-desc">Subscribers, revenue, expenses, net position. Not estimates. Actual figures. Updated before I write a word.</div>
+    </div>
+  </div>
+
+  <div class="what-item">
+    <div class="what-icon">🔧</div>
+    <div>
+      <div class="what-title">What Foreman actually did</div>
+      <div class="what-desc">The work log. The scripts he wrote. The research he ran. The decisions I made. The stuff that didn't work.</div>
+    </div>
+  </div>
+
+  <div class="what-item">
+    <div class="what-icon">🧠</div>
+    <div>
+      <div class="what-title">One clear lesson</div>
+      <div class="what-desc">What I learned that week, distilled into one thing you can actually use. Not a listicle. A real observation.</div>
+    </div>
+  </div>
+
+  <div class="what-item">
+    <div class="what-icon">⏭️</div>
+    <div>
+      <div class="what-title">What comes next</div>
+      <div class="what-desc">The plan for next week. What I'm betting on. What Foreman is building. You see it before it happens.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION DIVIDER -->
+<div class="section-divider">
+  <hr><span>The math</span><hr>
+</div>
+
+<!-- PROOF STRIP -->
+<div class="proof-strip" style="max-width:540px; margin-left:auto; margin-right:auto; margin-bottom:48px;">
+  <div class="proof-strip-label">Mission scoreboard — live</div>
+  <div class="proof-row">
+    <span class="proof-key">Mission</span>
+    <span class="proof-val">$11,998/mo in 90 days</span>
+  </div>
+  <div class="proof-row">
+    <span class="proof-key">Started</span>
+    <span class="proof-val">March 26, 2026</span>
+  </div>
+  <div class="proof-row">
+    <span class="proof-key">Day</span>
+    <span class="proof-val orange" id="proofDay">8 of 90</span>
+  </div>
+  <div class="proof-row">
+    <span class="proof-key">Newsletter subscribers</span>
+    <span class="proof-val orange" id="proofSubs">17</span>
+  </div>
+  <div class="proof-row">
+    <span class="proof-key">Monthly revenue</span>
+    <span class="proof-val orange" id="proofRev">$54</span>
+  </div>
+  <div class="proof-row">
+    <span class="proof-key">Gap to close</span>
+    <span class="proof-val red" id="proofGap">$11,944/mo</span>
+  </div>
+  <div class="proof-row">
+    <span class="proof-key">Days left</span>
+    <span class="proof-val red" id="proofDaysLeft">82</span>
+  </div>
+</div>
+
+<!-- SECTION DIVIDER -->
+<div class="section-divider">
+  <hr><span>Is this for you?</span><hr>
+</div>
+
+<!-- FOR SECTION -->
+<div class="for-section">
+  <div class="for-label">This newsletter is for you if:</div>
+  <div class="for-yes"><strong>You have a day job and bills to pay</strong> — not a startup founder. A regular person.</div>
+  <div class="for-yes"><strong>You're curious about AI</strong> but haven't found a non-hype version of it yet.</div>
+  <div class="for-yes"><strong>You want to see if this actually works</strong> — not just hear that it does.</div>
+  <div class="for-yes"><strong>You learn from watching someone try something</strong> in real time.</div>
+
+  <br>
+  <div class="for-label" style="color:#555;">Not for you if:</div>
+  <div class="for-no"><strong>You want a get-rich-quick story.</strong> This is the opposite of that.</div>
+  <div class="for-no"><strong>You're already an AI expert.</strong> This is for normal people.</div>
+  <div class="for-no"><strong>You only care about successes.</strong> The failures are half the content.</div>
+</div>
+
+<!-- FINAL CTA -->
+<div class="final-cta">
+  <h2>Follow the mission.<br>It's free.</h2>
+  <p>
+    New issue every Monday. You'll see the numbers before most people do.<br>
+    No spam. Unsubscribe anytime.
+  </p>
+  <a class="cta-main" href="https://foremansreport.beehiiv.com/subscribe" target="_blank">
+    Get Foreman's Report →
+  </a>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>
+    <a href="https://adamisabell-code.github.io/foreman-scoreboard/" target="_blank">Live scoreboard →</a>
+    &nbsp;·&nbsp;
+    <a href="https://foremansreport.beehiiv.com" target="_blank">Newsletter archive →</a>
+  </p>
+  <br>
+  <p>Built with OpenClaw. Documented by Adam. 🔧<br>
+  Free. One email per week. No spam.</p>
+</div>
+
+<script>
+  // ── Live data from scoreboard (same source as index.html) ──
+  const LAUNCH_DATE = new Date('2026-03-26T00:00:00Z');
+  const TOTAL_DAYS = 90;
+  const MONTHLY_GOAL = 11998;
+
+  // Injected by update-scoreboard.js — these values get replaced at build time
+  const scoreboardData = {
+    subscribers: 17,
+    monthlyRevenue: 54,
+    dayNumber: 8,
+    lastUpdated: "April 2, 2026"
+  };
+
+  function render() {
+    const d = scoreboardData;
+    const daysLeft = Math.max(0, TOTAL_DAYS - d.dayNumber);
+    const gap = Math.max(0, MONTHLY_GOAL - d.monthlyRevenue);
+
+    // Hero pill
+    document.getElementById('subCount').textContent = d.subscribers.toLocaleString();
+    document.getElementById('revCount').textContent = '$' + d.monthlyRevenue.toLocaleString();
+    document.getElementById('daysLeft').textContent = daysLeft;
+
+    // Day badge
+    document.getElementById('dayBadge').textContent = 'Day ' + d.dayNumber + ' of ' + TOTAL_DAYS;
+
+    // Proof strip
+    document.getElementById('proofDay').textContent = d.dayNumber + ' of ' + TOTAL_DAYS;
+    document.getElementById('proofSubs').textContent = d.subscribers.toLocaleString();
+    document.getElementById('proofRev').textContent = '$' + d.monthlyRevenue.toLocaleString();
+    document.getElementById('proofGap').textContent = '$' + gap.toLocaleString() + '/mo';
+    document.getElementById('proofDaysLeft').textContent = daysLeft;
+  }
+
+  render();
+</script>
+</body>
+</html>

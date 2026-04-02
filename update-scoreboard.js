@@ -15,6 +15,7 @@ const BEEHIIV_PUB_ID  = process.env.BEEHIIV_PUB_ID  || 'pub_5af96f9a-74b2-4dc2-a
 const STRIPE_SECRET   = process.env.STRIPE_SECRET_KEY;
 const LAUNCH_DATE     = new Date('2026-03-26T00:00:00Z');     // Day 1 — first TikTok posted
 const HTML_PATH       = path.join(__dirname, 'index.html');
+const SUBSCRIBE_PATH  = path.join(__dirname, 'subscribe.html');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function httpsGet(url, headers = {}) {
@@ -127,12 +128,24 @@ function patchHTML(subs, revenue, members, days, dateStr) {
 
   fs.writeFileSync(HTML_PATH, html, 'utf8');
   console.log(`✅ HTML updated: ${subs} subs | $${revenue} revenue | ${members} members | Day ${days}`);
+
+  // Also patch subscribe.html if it exists
+  if (fs.existsSync(SUBSCRIBE_PATH)) {
+    let subHtml = fs.readFileSync(SUBSCRIBE_PATH, 'utf8');
+    const daysLeft2 = Math.max(0, 90 - days);
+    subHtml = subHtml.replace(/subscribers:\s*\d+,/, `subscribers: ${subs},`);
+    subHtml = subHtml.replace(/monthlyRevenue:\s*[\d.]+,/, `monthlyRevenue: ${revenue},`);
+    subHtml = subHtml.replace(/dayNumber:\s*\d+,/, `dayNumber: ${days},`);
+    subHtml = subHtml.replace(/lastUpdated:\s*"[^"]+"/, `lastUpdated: "${dateStr}"`);
+    fs.writeFileSync(SUBSCRIBE_PATH, subHtml, 'utf8');
+    console.log(`✅ subscribe.html also updated`);
+  }
 }
 
 // ── Git commit + push ─────────────────────────────────────────────────────────
 function gitPush(days) {
   try {
-    execSync(`git -C "${__dirname}" add index.html`, { stdio: 'inherit' });
+    execSync(`git -C "${__dirname}" add index.html subscribe.html`, { stdio: 'inherit' });
     execSync(`git -C "${__dirname}" commit -m "Auto-update scoreboard: Day ${days}"`, { stdio: 'inherit' });
     execSync(`git -C "${__dirname}" push`, { stdio: 'inherit' });
     console.log('✅ Pushed to GitHub');
