@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foreman's Report — Founding Member Waitlist</title>
+  <meta name="description" content="Run an AI agent alongside your day job. Learn it live, with the guy doing it right now. Join the founding cohort." />
+  <meta property="og:title" content="Foreman's Report — Founding Member Waitlist" />
+  <meta property="og:description" content="AI agent replacing $11,998/mo in bills. Documented in real time. Join the founding cohort." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Tokens ── */
+    :root {
+      --black:   #0d0d0d;
+      --white:   #f5f5f0;
+      --orange:  #e8500a;
+      --orange2: #c9400a;
+      --gray:    #888;
+      --light:   #1a1a1a;
+      --border:  #2a2a2a;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    /* ── Base ── */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--black);
+      color: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ── */
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Header ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    header .wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+    .logo-text {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .logo-text span { color: var(--orange); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 64px 0 48px;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 6vw, 44px);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .hero-sub {
+      font-size: 18px;
+      color: #bbb;
+      max-width: 520px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    /* ── Stat bar ── */
+    .stats {
+      display: flex;
+      gap: 32px;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+    .stat-item {}
+    .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--gray);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── What you get ── */
+    .section { margin-bottom: 56px; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+    }
+    .section h2 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 24px;
+    }
+
+    .benefit-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .benefit-list li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 18px;
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    .benefit-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .benefit-title {
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 4px;
+      color: var(--white);
+    }
+    .benefit-desc {
+      font-size: 14px;
+      color: #999;
+      line-height: 1.5;
+    }
+
+    /* ── Pricing card ── */
+    .price-card {
+      background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .price-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--orange), var(--orange2));
+    }
+    .price-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--orange);
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    .price-main {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .price-amount {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--white);
+    }
+    .price-period { font-size: 16px; color: var(--gray); }
+    .price-note {
+      font-size: 13px;
+      color: var(--gray);
+      margin-bottom: 28px;
+    }
+    .price-note s { color: #555; }
+
+    .cta-btn {
+      display: block;
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--orange);
+      color: #fff;
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+    .cta-btn:hover { background: var(--orange2); transform: translateY(-1px); }
+    .cta-btn:active { transform: translateY(0); }
+
+    .trust-line {
+      text-align: center;
+      font-size: 13px;
+      color: var(--gray);
+      margin-top: 14px;
+    }
+
+    .spots-line {
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .spots-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 2s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ── Story section ── */
+    .story-text {
+      font-size: 16px;
+      color: #ccc;
+      line-height: 1.75;
+    }
+    .story-text p { margin-bottom: 16px; }
+    .story-text strong { color: var(--white); }
+
+    /* ── Not for you ── */
+    .nope-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .nope-list li {
+      font-size: 15px;
+      color: #888;
+      padding-left: 22px;
+      position: relative;
+    }
+    .nope-list li::before {
+      content: '×';
+      position: absolute;
+      left: 0;
+      color: #555;
+      font-weight: 700;
+    }
+
+    .yes-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .yes-list li {
+      font-size: 15px;
+      color: #ccc;
+      padding-left: 22px;
+      position: relative;
+    }
+    .yes-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--orange);
+      font-weight: 700;
+    }
+
+    /* ── FAQ ── */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .faq-q {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .faq-a {
+      font-size: 14px;
+      color: #999;
+      line-height: 1.6;
+    }
+
+    /* ── Final CTA ── */
+    .final-cta {
+      text-align: center;
+      padding: 48px 0 64px;
+      border-top: 1px solid var(--border);
+    }
+    .final-cta h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .final-cta p {
+      font-size: 15px;
+      color: #999;
+      margin-bottom: 28px;
+    }
+    .final-cta .cta-btn {
+      max-width: 320px;
+      margin: 0 auto 12px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+    }
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-left {
+      font-size: 13px;
+      color: var(--gray);
+    }
+    .footer-right {
+      font-size: 13px;
+      color: var(--gray);
+    }
+    .footer-right a {
+      color: var(--gray);
+      text-decoration: none;
+    }
+    .footer-right a:hover { color: var(--white); }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      .hero { padding: 44px 0 36px; }
+      .stats { gap: 20px; }
+      .price-card { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="wrap">
+      <span class="logo-icon">🔧</span>
+      <a href="https://foremansreport.beehiiv.com" class="logo-text">
+        Foreman<span>'s Report</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="wrap">
+      <span class="hero-eyebrow">Founding Member Access</span>
+      <h1>Run an AI agent<br/><em>alongside your day job.</em></h1>
+      <p class="hero-sub">
+        Learn it live — with the guy doing it right now.
+        Real work. Real numbers. Documented weekly.
+      </p>
+
+      <!-- Live stats bar -->
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-value" id="stat-day">Day 5</div>
+          <div class="stat-label">Into the 90-day challenge</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">$11,998</div>
+          <div class="stat-label">Monthly bills to replace</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">85</div>
+          <div class="stat-label">Days remaining</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- Story -->
+    <div class="section">
+      <div class="section-label">What this is</div>
+      <div class="story-text">
+        <p>
+          Five weeks ago I gave an AI agent a job. Not a prompt. A <strong>job.</strong>
+        </p>
+        <p>
+          Its name is Foreman. It works while I'm at work. It writes TikTok scripts,
+          drafts newsletters, tracks metrics, researches monetization angles, and logs
+          its own daily work to Notion. Every morning I spend 20 minutes reviewing
+          what it built and telling it what to adjust.
+        </p>
+        <p>
+          The mission: replace <strong>$11,998/month in bills</strong> within 90 days.
+          I'm building it completely in public — real numbers, no highlight reel.
+        </p>
+        <p>
+          The comments started shifting around week three.
+          People stopped asking "is this real?" and started asking
+          <strong>"how do I set this up for myself?"</strong>
+        </p>
+        <p>
+          That's why this exists.
+        </p>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- What you get -->
+    <div class="section">
+      <div class="section-label">What you get</div>
+      <h2>Founding member access</h2>
+      <ul class="benefit-list">
+        <li>
+          <span class="benefit-icon">🔧</span>
+          <div>
+            <div class="benefit-title">Foreman's actual weekly work files</div>
+            <div class="benefit-desc">
+              Not summaries. The real outputs — research docs, TikTok scripts,
+              newsletter drafts, morning reports. What Foreman produced, what got
+              changed, and why. You see inside the machine.
+            </div>
+          </div>
+        </li>
+        <li>
+          <span class="benefit-icon">👥</span>
+          <div>
+            <div class="benefit-title">A community running the same experiment</div>
+            <div class="benefit-desc">
+              People sharing what's working, what their agents are actually handling,
+              what flopped. Real experiments from real jobs, not theoretical prompts.
+            </div>
+          </div>
+        </li>
+        <li>
+          <span class="benefit-icon">❓</span>
+          <div>
+            <div class="benefit-title">Direct Q&A access</div>
+            <div class="benefit-desc">
+              How do I set this up for my situation? Is this output any good?
+              What should I tell my agent to work on? Adam answers personally.
+              No chat bot. No support ticket.
+            </div>
+          </div>
+        </li>
+        <li>
+          <span class="benefit-icon">📊</span>
+          <div>
+            <div class="benefit-title">Live scoreboard access</div>
+            <div class="benefit-desc">
+              Real-time dashboard: subscribers, revenue, days remaining.
+              You watch the experiment unfold week by week — including if it fails.
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Pricing -->
+    <div class="section">
+      <div class="section-label">Pricing</div>
+      <div class="price-card">
+        <span class="price-badge">Founding Member Rate</span>
+        <div class="price-main">
+          <span class="price-amount">$19</span>
+          <span class="price-period">/month</span>
+        </div>
+        <p class="price-note">
+          Regular rate after founding cohort closes: <s>$29/month</s><br/>
+          Limited to the first 50 members.
+        </p>
+        <a class="cta-btn" href="https://buy.stripe.com/fZu28t63Z81F1YkbNabQY07" id="main-cta">
+          → Join the Founding Cohort
+        </a>
+        <p class="trust-line">Cancel anytime. 30-day refund if it's not useful.</p>
+        <p class="spots-line">
+          <span class="spots-dot"></span>
+          Founding cohort open now — spots are limited
+        </p>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Who it's for / not for -->
+    <div class="section">
+      <div class="section-label">Is this for you?</div>
+      <h2>This is NOT a course.</h2>
+      <ul class="nope-list" style="margin-bottom: 28px;">
+        <li>No videos to watch at 1.5x speed</li>
+        <li>No PDF you'll never open</li>
+        <li>No certification</li>
+        <li>No "prompting secrets" or hacks</li>
+      </ul>
+
+      <h2>This IS a working group.</h2>
+      <ul class="yes-list">
+        <li>You have a day job and limited time</li>
+        <li>You want to see AI do real work, not demos</li>
+        <li>You're willing to experiment without a guarantee</li>
+        <li>You want to watch someone build in public and build alongside them</li>
+        <li>You're curious whether this could work for your situation</li>
+      </ul>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- FAQ -->
+    <div class="section">
+      <div class="section-label">Questions</div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q">What AI tool does Foreman run on?</div>
+          <div class="faq-a">OpenClaw — it's a personal AI agent platform. You don't need to be technical to use it. Full setup walkthrough is in the newsletter and community.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Do I need to know how to code?</div>
+          <div class="faq-a">No. Adam doesn't code. The whole point is that this is for people who want to run an AI agent without a technical background.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">What if the 90-day mission fails?</div>
+          <div class="faq-a">Then you watched an honest, documented attempt in real time — which is more useful than a polished success story. The transparency is the product.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">How is this different from the free newsletter?</div>
+          <div class="faq-a">The free newsletter is the weekly summary. The community is behind-the-scenes: the raw work files, the community of people doing the same thing, and direct access to Adam.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">Can I cancel if I want to?</div>
+          <div class="faq-a">Yes. Monthly, no contract. Cancel in one click. And if you're not satisfied in the first 30 days, email and ask for a refund — done.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /wrap -->
+
+  <!-- Final CTA -->
+  <div class="final-cta">
+    <div class="wrap">
+      <h2>The first dollar changes everything.</h2>
+      <p>Join the founding cohort before the rate goes up.</p>
+      <a class="cta-btn" href="https://buy.stripe.com/fZu28t63Z81F1YkbNabQY07">
+        → Join the Founding Cohort — $19/mo
+      </a>
+      <p class="trust-line">Cancel anytime · 30-day refund · No contracts</p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-left">🔧 Foreman's Report</div>
+      <div class="footer-right">
+        <a href="https://foremansreport.beehiiv.com">Free newsletter</a>
+        &nbsp;·&nbsp;
+        <a href="https://www.tiktok.com/@foremansreport">TikTok</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
