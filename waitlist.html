@@ -432,7 +432,7 @@
       <!-- Live stats bar -->
       <div class="stats">
         <div class="stat-item">
-          <div class="stat-value" id="stat-day">Day 12</div>
+          <div class="stat-value" id="stat-day">Day 18</div>
           <div class="stat-label">Into the 90-day challenge</div>
         </div>
         <div class="stat-item">
@@ -440,7 +440,7 @@
           <div class="stat-label">Monthly bills to replace</div>
         </div>
         <div class="stat-item">
-          <div class="stat-value">78</div>
+          <div class="stat-value" id="stat-days-left">72</div>
           <div class="stat-label">Days remaining</div>
         </div>
       </div>
@@ -633,5 +633,17 @@
     </div>
   </footer>
 
+  <script>
+    // Auto-sync day number from scoreboard data
+    (function() {
+      var LAUNCH = new Date('2026-03-26T00:00:00Z').getTime();
+      var elapsed = Math.max(1, Math.floor((Date.now() - LAUNCH) / 86400000) + 1);
+      var remaining = Math.max(0, 90 - elapsed + 1);
+      var dayEl = document.getElementById('stat-day');
+      var leftEl = document.getElementById('stat-days-left');
+      if (dayEl) dayEl.textContent = 'Day ' + elapsed;
+      if (leftEl) leftEl.textContent = remaining;
+    })();
+  </script>
 </body>
 </html>

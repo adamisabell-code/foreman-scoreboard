@@ -145,7 +145,7 @@ function patchHTML(subs, revenue, members, days, dateStr) {
 // ── Git commit + push ─────────────────────────────────────────────────────────
 function gitPush(days) {
   try {
-    execSync(`git -C "${__dirname}" add index.html subscribe.html`, { stdio: 'inherit' });
+    execSync(`git -C "${__dirname}" add index.html subscribe.html waitlist.html`, { stdio: 'inherit' });
     execSync(`git -C "${__dirname}" commit -m "Auto-update scoreboard: Day ${days}"`, { stdio: 'inherit' });
     execSync(`git -C "${__dirname}" push`, { stdio: 'inherit' });
     console.log('✅ Pushed to GitHub');
